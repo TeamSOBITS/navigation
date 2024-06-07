@@ -54,6 +54,7 @@
 #include <nav_msgs/GetPlan.h>
 
 #include <pluginlib/class_loader.hpp>
+#include <std_msgs/Bool.h>
 #include <std_srvs/Empty.h>
 
 #include <dynamic_reconfigure/server.h>
@@ -157,6 +158,8 @@ namespace move_base {
 
       void goalCB(const geometry_msgs::PoseStamped::ConstPtr& goal);
 
+      void swichCB(const std_msgs::Bool& data);
+
       void planThread();
 
       void executeCb(const move_base_msgs::MoveBaseGoalConstPtr& move_base_goal);
@@ -195,7 +198,7 @@ namespace move_base {
       uint32_t planning_retries_;
       double conservative_reset_dist_, clearing_radius_;
       ros::Publisher current_goal_pub_, vel_pub_, action_goal_pub_, recovery_status_pub_;
-      ros::Subscriber goal_sub_;
+      ros::Subscriber goal_sub_, swich_sub_;
       ros::ServiceServer make_plan_srv_, clear_costmaps_srv_;
       bool shutdown_costmaps_, clearing_rotation_allowed_, recovery_behavior_enabled_;
       bool make_plan_clear_costmap_, make_plan_add_unreachable_goal_;
@@ -232,6 +235,7 @@ namespace move_base {
       move_base::MoveBaseConfig default_config_;
       bool setup_, p_freq_change_, c_freq_change_;
       bool new_global_plan_;
+      bool swich_dafalt_;
   };
 };
 #endif

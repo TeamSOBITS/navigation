@@ -105,6 +105,8 @@ namespace move_base {
     //like nav_view and rviz
     ros::NodeHandle simple_nh("move_base_simple");
     goal_sub_ = simple_nh.subscribe<geometry_msgs::PoseStamped>("goal", 1, [this](auto& goal){ goalCB(goal); });
+    swich_sub_ = simple_nh.subscribe<std_msgs::Bool>("ydwa_swiching_trigger", 10, [this](const std_msgs::BoolConstPtr& data){ swichCB(*data); });
+    swich_dafalt_ = true;
 
     //we'll assume the radius of the robot to be consistent with what's specified for the costmaps
     private_nh.param("local_costmap/inscribed_radius", inscribed_radius_, 0.325);
@@ -279,6 +281,10 @@ namespace move_base {
     action_goal.goal.target_pose = *goal;
 
     action_goal_pub_.publish(action_goal);
+  }
+
+  void MoveBase::swichCB(const std_msgs::Bool& data){
+    swich_dafalt_ = data.data;
   }
 
   void MoveBase::clearCostmapWindows(double size_x, double size_y){
@@ -914,7 +920,11 @@ namespace move_base {
                            cmd_vel.linear.x, cmd_vel.linear.y, cmd_vel.angular.z );
           last_valid_control_ = ros::Time::now();
           //make sure that we send the velocity command to the base
-          vel_pub_.publish(cmd_vel);
+          if (swich_dafalt_) {
+            vel_pub_.publish(cmd_vel);     //// swich!!!!!!
+            ROS_INFO("DEFALT!!!");
+          }
+          else ROS_INFO("YDWA!!!!");
           if(recovery_trigger_ == CONTROLLING_R)
             recovery_index_ = 0;
         }
