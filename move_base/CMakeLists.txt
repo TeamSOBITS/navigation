@@ -85,3 +85,9 @@ install(DIRECTORY include/${PROJECT_NAME}/
   DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
   FILES_MATCHING PATTERN "*.h"
 )
+
+## y-dwa switching for SOBIT PRO
+add_executable(pro_move_base src/pro_move_base.cpp)
+target_link_libraries(pro_move_base
+  ${catkin_LIBRARIES}
+)
