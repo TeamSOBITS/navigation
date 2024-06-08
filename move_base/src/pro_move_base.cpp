@@ -40,96 +40,70 @@ using namespace Eigen;
 
 class DWA_PARAM {
     public:
+        ros::NodeHandle nh_, pnh_;
         // speed
-        float sum_max_speed = 0.30;
-        float sum_min_speed = 0.05;
-        float max_speed_x = 0.30;
-        float min_speed_x = 0.00;
-        float max_speed_y = 0.20;
-        float min_speed_y =-0.20;
-        float max_angle = 50.0 * (M_PI/180.);
-        float max_angle_y = 30.0 * (M_PI/180.);
+        float sum_max_speed;
+        float sum_min_speed;
+        float max_speed_x;
+        float min_speed_x;
+        float max_speed_y;
+        float min_speed_y;
+        float max_angle;
+        float max_angle_y;
 
         // accel
-        float max_accel_x = 0.35;
-        float max_accel_y = 0.30;
-        float max_angle_accel = 60.0 * (M_PI/180.);
-        float max_angle_accel_y = 50.0 * (M_PI/180.);
+        float max_accel_x;
+        float max_accel_y;
+        float max_angle_accel;
+        float max_angle_accel_y;
 
         // weight
-        float velocity_weight = 1.0;
-        float angle_weight = 1.0;
-        float obstacle_distance_weight = 1.0;
-        float trajectory_weight = 1.0;
+        float velocity_weight;
+        float angle_weight;
+        float obstacle_distance_weight;
+        float trajectory_weight;
 
         // time
-        float delta_time = 0.1;
-        int predect_step = 6;
+        float delta_time;
+        int predect_step;
 
         // reso
-        float speed_reso_x = 0.03;
-        float speed_reso_y = 0.02;
-        float speed_reso_ang = 5.0 * (M_PI/180.);
+        float speed_reso_x;
+        float speed_reso_y;
+        float speed_reso_ang;
 
         // other
-        float robot_radius = 0.35;
-        float goal_position_range = 0.2;
-        float local_position_range = 0.45;
-        float linear_y_angle_range = 0.0 * (M_PI/180.);
+        float robot_radius;
+        float goal_position_range;
+        float local_position_range;
+        float linear_y_angle_range;
 
-        DWA_PARAM() {
-            ros::NodeHandle nh;
-            XmlRpc::XmlRpcValue param;
-            nh.getParam("sum_max_speed", param);
-            sum_max_speed = static_cast<double>(param);
-            nh.getParam("sum_min_speed", param);
-            sum_min_speed = static_cast<double>(param);
-            nh.getParam("max_speed_x", param);
-            max_speed_x = static_cast<double>(param);
-            nh.getParam("min_speed_x", param);
-            min_speed_x = static_cast<double>(param);
-            nh.getParam("max_speed_y", param);
-            max_speed_y = static_cast<double>(param);
-            nh.getParam("min_speed_y", param);
-            min_speed_y = static_cast<double>(param);
-            nh.getParam("max_angle", param);
-            max_angle = static_cast<double>(param);
-            nh.getParam("max_angle_y", param);
-            max_angle_y = static_cast<double>(param);
-            nh.getParam("max_accel_x", param);
-            max_accel_x = static_cast<double>(param);
-            nh.getParam("max_accel_y", param);
-            max_accel_y = static_cast<double>(param);
-            nh.getParam("max_angle_accel", param);
-            max_angle_accel = static_cast<double>(param);
-            nh.getParam("max_angle_accel_y", param);
-            max_angle_accel_y = static_cast<double>(param);
-            nh.getParam("velocity_weight", param);
-            velocity_weight = static_cast<double>(param);
-            nh.getParam("angle_weight", param);
-            angle_weight = static_cast<double>(param);
-            nh.getParam("obstacle_distance_weight", param);
-            obstacle_distance_weight = static_cast<double>(param);
-            nh.getParam("trajectory_weight", param);
-            trajectory_weight = static_cast<double>(param);
-            nh.getParam("delta_time", param);
-            delta_time = static_cast<double>(param);
-            nh.getParam("predect_step", param);
-            predect_step = static_cast<int>(param);
-            nh.getParam("speed_reso_x", param);
-            speed_reso_x = static_cast<double>(param);
-            nh.getParam("speed_reso_y", param);
-            speed_reso_y = static_cast<double>(param);
-            nh.getParam("speed_reso_ang", param);
-            speed_reso_ang = static_cast<double>(param);
-            nh.getParam("robot_radius", param);
-            robot_radius = static_cast<double>(param);
-            nh.getParam("goal_position_range", param);
-            goal_position_range = static_cast<double>(param);
-            nh.getParam("local_position_range", param);
-            local_position_range = static_cast<double>(param);
-            nh.getParam("linear_y_angle_range", param);
-            linear_y_angle_range = static_cast<double>(param);
+        DWA_PARAM(): nh_(), pnh_("~") {
+            sum_max_speed = pnh_.param<float>( "sum_max_speed", 0.00 );
+            sum_min_speed = pnh_.param<float>( "sum_min_speed", 0.00 );
+            max_speed_x = pnh_.param<float>( "max_speed_x", 0.00 );
+            min_speed_x = pnh_.param<float>( "min_speed_x", 0.00 );
+            max_speed_y = pnh_.param<float>( "max_speed_y", 0.00 );
+            min_speed_y = pnh_.param<float>( "min_speed_y", 0.00 );
+            max_angle = pnh_.param<float>( "max_angle", 0.00 );
+            max_angle_y = pnh_.param<float>( "max_angle_y", 0.00 );
+            max_accel_x = pnh_.param<float>( "max_accel_x", 0.00 );
+            max_accel_y = pnh_.param<float>( "max_accel_y", 0.00 );
+            max_angle_accel = pnh_.param<float>( "max_angle_accel", 0.00 );
+            max_angle_accel_y = pnh_.param<float>( "max_angle_accel_y", 0.00 );
+            velocity_weight = pnh_.param<float>( "velocity_weight", 0.00 );
+            angle_weight = pnh_.param<float>( "angle_weight", 0.00 );
+            obstacle_distance_weight = pnh_.param<float>( "obstacle_distance_weight", 0.00 );
+            trajectory_weight = pnh_.param<float>( "trajectory_weight", 0.00 );
+            delta_time = pnh_.param<float>( "delta_time", 0.00 );
+            predect_step = pnh_.param<float>( "predect_step", 0.00 );
+            speed_reso_x = pnh_.param<float>( "speed_reso_x", 0.00 );
+            speed_reso_y = pnh_.param<float>( "speed_reso_y", 0.00 );
+            speed_reso_ang = pnh_.param<float>( "speed_reso_ang", 0.00 );
+            robot_radius = pnh_.param<float>( "robot_radius", 0.00 );
+            goal_position_range = pnh_.param<float>( "goal_position_range", 0.00 );
+            local_position_range = pnh_.param<float>( "local_position_range", 0.00 );
+            linear_y_angle_range = pnh_.param<float>( "linear_y_angle_range", 0.00 );
         }
 };
 
@@ -359,7 +333,6 @@ class PATH_MOVING {
                     }
                     Vector2d resultg = Ag.colPivHouseholderQr().solve(bg);
                     float path_angle_g = atan(resultg[0]);
-                    printf("path_angle_g = %f\n",path_angle_g);
                     if (std::fabs(path_angle_g) < 45*M_PI/180.) {
                         if (0 < global_path[global_path.size()-1].x) y_challenge = true;
                     }
